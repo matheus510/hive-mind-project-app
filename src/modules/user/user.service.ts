@@ -16,4 +16,20 @@ export class UserService {
     async getUsers(): Promise<any[]> {
         return this.prisma.user.findMany();
     }
+
+    async getUser(id: string): Promise<any> {
+        return this.prisma.user.findUnique({
+            where: {
+                user_id: id,
+            },
+        });
+    }
+
+    async deleteUser(id: string): Promise<any> {
+        return this.prisma.user.delete({
+            where: {
+                user_id: id,
+            },
+        });
+    }
 }

@@ -13,7 +13,24 @@ export class RoomService {
             },
         });
     }
+
     async getRooms(): Promise<any[]> {
         return this.prisma.room.findMany();
+    }
+
+    async getRoom(id: string): Promise<any> {
+        return this.prisma.room.findUnique({
+            where: {
+                room_id: id,
+            },
+        });
+    }
+
+    async deleteRoom(id: string): Promise<any> {
+        return this.prisma.room.delete({
+            where: {
+                room_id: id,
+            },
+        });
     }
 }
