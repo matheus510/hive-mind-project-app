@@ -16,4 +16,12 @@ model Room {
   room_id         String  @id @default(uuid())
   limited_life    Boolean @default(false)
   room_name   String
+  users          User[]  @relation("RoomUsers")
+}
+
+model User {
+  user_id     String   @id @default(uuid())
+  user_name   String   @unique
+  room        Room?    @relation("RoomUsers", fields: [room_id], references: [room_id])
+  room_id     String?
 }
