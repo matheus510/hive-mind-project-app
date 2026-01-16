@@ -12,16 +12,37 @@ datasource db {
   provider = "postgresql"
 }
 
-model Room {
-  room_id         String  @id @default(uuid())
-  limited_life    Boolean @default(false)
-  room_name   String
-  users          User[]  @relation("RoomUsers")
+enum GameStatus {
+  LOBBY
+  PLAYING
+  GAME_OVER
+  VICTORY
 }
 
-model User {
-  user_id     String   @id @default(uuid())
-  user_name   String   @unique
-  room        Room?    @relation("RoomUsers", fields: [room_id], references: [room_id])
-  room_id     String?
+model Game {
+  id            String        @id @default(uuid())
+  limited_life  Boolean       @default(false)
+  game_name     String
+  players       PlayerState[]
+  status        GameStatus    @default(LOBBY)
+  lives         Int           @default(3)
+  round         Int           @default(0)
+  current_round Int           @default(0)
+}
+
+model Player {
+  id          String        @id @default(uuid())
+  player_name String        @unique
+  state       PlayerState[]
+}
+
+model PlayerState {
+  player     Player  @relation(fields: [player_id], references: [id])
+  game       Game    @relation(fields: [game_id], references: [id])
+  player_id  String  @unique
+  game_id    String
+  has_played Boolean @default(true)
+  socket_id  String?
+
+  @@id([player_id, game_id])
 }
